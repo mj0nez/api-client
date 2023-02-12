@@ -10,3 +10,6 @@ dist/
 .tox/
 pip-wheel-metadata/
 .idea/
+.venv
+.env
+.vscode
