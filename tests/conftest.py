@@ -1,6 +1,7 @@
-import os
+from pathlib import Path
 from typing import NamedTuple
 from unittest.mock import Mock, sentinel
+
 
 import pytest
 import requests
@@ -11,8 +12,7 @@ from apiclient import APIClient
 from apiclient.request_formatters import BaseRequestFormatter
 from apiclient.response_handlers import BaseResponseHandler
 
-BASE_DIR = os.path.abspath(os.path.realpath(os.path.dirname(__file__)))
-VCR_CASSETTE_DIR = os.path.join(BASE_DIR, "vcr_cassettes")
+VCR_CASSETTE_DIR = str(Path(__file__).parent / "vcr_cassettes")
 
 
 api_client_vcr = vcr.VCR(
