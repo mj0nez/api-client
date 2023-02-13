@@ -1,2 +1,5 @@
+python-keycloak
 requests
+requests-cache
+requests-oauthlib
 tenacity
