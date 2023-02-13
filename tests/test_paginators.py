@@ -2,7 +2,12 @@ from unittest.mock import Mock
 
 import pytest
 
-from apiclient import APIClient, JsonRequestFormatter, JsonResponseHandler, paginated
+from apiclient import (
+    APIClient,
+    JsonRequestFormatter,
+    JsonResponseHandler,
+    paginated,
+)
 from apiclient.authentication_methods import NoAuthentication
 from apiclient.paginators import set_strategy
 from apiclient.request_strategies import BaseRequestStrategy, RequestStrategy
@@ -84,7 +89,11 @@ def test_url_parameter_pagination(mock_requests):
         json={"page1": "data", "next": "mock://testserver.com/page2"},
         status_code=200,
     )
-    mock_requests.get("mock://testserver.com/page2", json={"page2": "data", "next": None}, status_code=200)
+    mock_requests.get(
+        "mock://testserver.com/page2",
+        json={"page2": "data", "next": None},
+        status_code=200,
+    )
     response_data = [
         {"page1": "data", "next": "mock://testserver.com/page2"},
         {"page2": "data", "next": None},

@@ -4,7 +4,12 @@ from unittest.mock import Mock
 
 import requests
 
-from apiclient import APIClient, JsonRequestFormatter, JsonResponseHandler, NoAuthentication
+from apiclient import (
+    APIClient,
+    JsonRequestFormatter,
+    JsonResponseHandler,
+    NoAuthentication,
+)
 from apiclient.request_formatters import BaseRequestFormatter
 from apiclient.request_strategies import BaseRequestStrategy
 from apiclient.response import RequestsResponse, Response

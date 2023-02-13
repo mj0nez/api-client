@@ -4,7 +4,11 @@ from xml.etree import ElementTree
 
 import pytest
 
-from apiclient import JsonResponseHandler, RequestsResponseHandler, XmlResponseHandler
+from apiclient import (
+    JsonResponseHandler,
+    RequestsResponseHandler,
+    XmlResponseHandler,
+)
 from apiclient.exceptions import ResponseParseError
 from apiclient.response import RequestsResponse
 from apiclient.response_handlers import BaseResponseHandler
@@ -29,7 +33,9 @@ class TestRequestsResponseHandler:
     handler = RequestsResponseHandler
 
     def test_original_response_is_returned(self):
-        data = self.handler.get_request_data(RequestsResponse(sentinel.response))
+        data = self.handler.get_request_data(
+            RequestsResponse(sentinel.response)
+        )
         assert data == sentinel.response
 
 
@@ -45,7 +51,10 @@ class TestJsonResponseHandler:
         response = build_response(data="foo")
         with pytest.raises(ResponseParseError) as exc_info:
             self.handler.get_request_data(response)
-        assert str(exc_info.value) == "Unable to decode response data to json. data='foo'"
+        assert (
+            str(exc_info.value)
+            == "Unable to decode response data to json. data='foo'"
+        )
 
     def test_blank_response_body_returns_none(self, blank_response):
         data = self.handler.get_request_data(blank_response)
@@ -56,7 +65,9 @@ class TestXmlResponseHandler:
     handler = XmlResponseHandler
 
     def test_response_data_is_parsed_correctly(self):
-        response = build_response(data='<?xml version="1.0"?><xml><title>Test Title</title></xml>')
+        response = build_response(
+            data='<?xml version="1.0"?><xml><title>Test Title</title></xml>'
+        )
         data = self.handler.get_request_data(response)
         assert isinstance(data, ElementTree.Element)
         assert data.tag == "xml"
@@ -67,7 +78,10 @@ class TestXmlResponseHandler:
         response = build_response(data="foo")
         with pytest.raises(ResponseParseError) as exc_info:
             self.handler.get_request_data(response)
-        assert str(exc_info.value) == "Unable to parse response data to xml. data='foo'"
+        assert (
+            str(exc_info.value)
+            == "Unable to parse response data to xml. data='foo'"
+        )
 
     def test_blank_response_body_returns_none(self, blank_response):
         data = self.handler.get_request_data(blank_response)

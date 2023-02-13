@@ -3,7 +3,10 @@ from unittest.mock import sentinel
 import pytest
 
 from apiclient import JsonRequestFormatter
-from apiclient.request_formatters import BaseRequestFormatter, NoOpRequestFormatter
+from apiclient.request_formatters import (
+    BaseRequestFormatter,
+    NoOpRequestFormatter,
+)
 
 
 class RequestFormatter(BaseRequestFormatter):

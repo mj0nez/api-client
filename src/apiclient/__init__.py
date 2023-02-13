@@ -9,5 +9,9 @@ from apiclient.client import APIClient
 from apiclient.decorates import endpoint
 from apiclient.paginators import paginated
 from apiclient.request_formatters import JsonRequestFormatter
-from apiclient.response_handlers import JsonResponseHandler, RequestsResponseHandler, XmlResponseHandler
+from apiclient.response_handlers import (
+    JsonResponseHandler,
+    RequestsResponseHandler,
+    XmlResponseHandler,
+)
 from apiclient.retrying import retry_request

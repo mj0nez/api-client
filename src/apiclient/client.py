@@ -2,11 +2,20 @@ import logging
 from copy import copy
 from typing import Any, Optional, Type
 
-from apiclient.authentication_methods import BaseAuthenticationMethod, NoAuthentication
+from apiclient.authentication_methods import (
+    BaseAuthenticationMethod,
+    NoAuthentication,
+)
 from apiclient.error_handlers import BaseErrorHandler, ErrorHandler
-from apiclient.request_formatters import BaseRequestFormatter, NoOpRequestFormatter
+from apiclient.request_formatters import (
+    BaseRequestFormatter,
+    NoOpRequestFormatter,
+)
 from apiclient.request_strategies import BaseRequestStrategy, RequestStrategy
-from apiclient.response_handlers import BaseResponseHandler, RequestsResponseHandler
+from apiclient.response_handlers import (
+    BaseResponseHandler,
+    RequestsResponseHandler,
+)
 from apiclient.utils.typing import OptionalDict
 
 LOG = logging.getLogger(__name__)
@@ -33,7 +42,9 @@ class APIClient:
         self._session = None
 
         # Set client strategies
-        self.set_authentication_method(authentication_method or NoAuthentication())
+        self.set_authentication_method(
+            authentication_method or NoAuthentication()
+        )
         self.set_response_handler(response_handler)
         self.set_error_handler(error_handler)
         self.set_request_formatter(request_formatter)
@@ -48,7 +59,9 @@ class APIClient:
     def set_session(self, session: Any):
         self._session = session
 
-    def set_authentication_method(self, authentication_method: BaseAuthenticationMethod):
+    def set_authentication_method(
+        self, authentication_method: BaseAuthenticationMethod
+    ):
         if not isinstance(authentication_method, BaseAuthenticationMethod):
             raise RuntimeError(
                 "provided authentication_method must be an instance of BaseAuthenticationMethod."
@@ -61,9 +74,16 @@ class APIClient:
     def get_response_handler(self) -> Type[BaseResponseHandler]:
         return self._response_handler
 
-    def set_response_handler(self, response_handler: Type[BaseResponseHandler]):
-        if not (response_handler and issubclass(response_handler, BaseResponseHandler)):
-            raise RuntimeError("provided response_handler must be a subclass of BaseResponseHandler.")
+    def set_response_handler(
+        self, response_handler: Type[BaseResponseHandler]
+    ):
+        if not (
+            response_handler
+            and issubclass(response_handler, BaseResponseHandler)
+        ):
+            raise RuntimeError(
+                "provided response_handler must be a subclass of BaseResponseHandler."
+            )
         self._response_handler = response_handler
 
     def get_error_handler(self) -> Type[BaseErrorHandler]:
@@ -71,15 +91,24 @@ class APIClient:
 
     def set_error_handler(self, error_handler: Type[BaseErrorHandler]):
         if not (error_handler and issubclass(error_handler, BaseErrorHandler)):
-            raise RuntimeError("provided error_handler must be a subclass of BaseErrorHandler.")
+            raise RuntimeError(
+                "provided error_handler must be a subclass of BaseErrorHandler."
+            )
         self._error_handler = error_handler
 
     def get_request_formatter(self) -> Type[BaseRequestFormatter]:
         return self._request_formatter
 
-    def set_request_formatter(self, request_formatter: Type[BaseRequestFormatter]):
-        if not (request_formatter and issubclass(request_formatter, BaseRequestFormatter)):
-            raise RuntimeError("provided request_formatter must be a subclass of BaseRequestFormatter.")
+    def set_request_formatter(
+        self, request_formatter: Type[BaseRequestFormatter]
+    ):
+        if not (
+            request_formatter
+            and issubclass(request_formatter, BaseRequestFormatter)
+        ):
+            raise RuntimeError(
+                "provided request_formatter must be a subclass of BaseRequestFormatter."
+            )
         self._request_formatter = request_formatter
 
     def get_request_strategy(self) -> BaseRequestStrategy:
@@ -87,7 +116,9 @@ class APIClient:
 
     def set_request_strategy(self, request_strategy: BaseRequestStrategy):
         if not isinstance(request_strategy, BaseRequestStrategy):
-            raise RuntimeError("provided request_strategy must be an instance of BaseRequestStrategy.")
+            raise RuntimeError(
+                "provided request_strategy must be an instance of BaseRequestStrategy."
+            )
         self._request_strategy = request_strategy
         self._request_strategy.set_client(self)
 
@@ -101,7 +132,9 @@ class APIClient:
         return self._authentication_method.get_query_params()
 
     def get_default_username_password_authentication(self) -> Optional[tuple]:
-        return self._authentication_method.get_username_password_authentication()
+        return (
+            self._authentication_method.get_username_password_authentication()
+        )
 
     def get_request_timeout(self) -> float:
         """Return the number of seconds before the request times out."""
@@ -111,27 +144,43 @@ class APIClient:
         """Enable Prototype pattern on client."""
         return copy(self)
 
-    def post(self, endpoint: str, data: dict, params: OptionalDict = None, **kwargs):
+    def post(
+        self, endpoint: str, data: dict, params: OptionalDict = None, **kwargs
+    ):
         """Send data and return response data from POST endpoint."""
         LOG.debug("POST %s with %s", endpoint, data)
-        return self.get_request_strategy().post(endpoint, data=data, params=params, **kwargs)
+        return self.get_request_strategy().post(
+            endpoint, data=data, params=params, **kwargs
+        )
 
     def get(self, endpoint: str, params: OptionalDict = None, **kwargs):
         """Return response data from GET endpoint."""
         LOG.debug("GET %s", endpoint)
-        return self.get_request_strategy().get(endpoint, params=params, **kwargs)
+        return self.get_request_strategy().get(
+            endpoint, params=params, **kwargs
+        )
 
-    def put(self, endpoint: str, data: dict, params: OptionalDict = None, **kwargs):
+    def put(
+        self, endpoint: str, data: dict, params: OptionalDict = None, **kwargs
+    ):
         """Send data to overwrite resource and return response data from PUT endpoint."""
         LOG.debug("PUT %s with %s", endpoint, data)
-        return self.get_request_strategy().put(endpoint, data=data, params=params, **kwargs)
+        return self.get_request_strategy().put(
+            endpoint, data=data, params=params, **kwargs
+        )
 
-    def patch(self, endpoint: str, data: dict, params: OptionalDict = None, **kwargs):
+    def patch(
+        self, endpoint: str, data: dict, params: OptionalDict = None, **kwargs
+    ):
         """Send data to update resource and return response data from PATCH endpoint."""
         LOG.debug("PATCH %s with %s", endpoint, data)
-        return self.get_request_strategy().patch(endpoint, data=data, params=params, **kwargs)
+        return self.get_request_strategy().patch(
+            endpoint, data=data, params=params, **kwargs
+        )
 
     def delete(self, endpoint: str, params: OptionalDict = None, **kwargs):
         """Remove resource with DELETE endpoint."""
         LOG.debug("DELETE %s", endpoint)
-        return self.get_request_strategy().delete(endpoint, params=params, **kwargs)
+        return self.get_request_strategy().delete(
+            endpoint, params=params, **kwargs
+        )

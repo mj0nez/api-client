@@ -86,7 +86,11 @@ class CookieAuthentication(BaseAuthenticationMethod):
     def __init__(
         self,
         auth_url: str,
-        authentication: Union[HeaderAuthentication, QueryParameterAuthentication, BasicAuthentication],
+        authentication: Union[
+            HeaderAuthentication,
+            QueryParameterAuthentication,
+            BasicAuthentication,
+        ],
     ):
         self._auth_url = auth_url
         self._authentication = authentication

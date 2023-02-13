@@ -6,7 +6,8 @@ A system exit is a valid way to exit this script and indicates a failure.
 """
 import subprocess
 from dataclasses import dataclass
-from typing import Dict, Union, Optional, List
+from typing import Dict, List, Optional, Union
+
 from packaging import version
 
 
@@ -136,7 +137,9 @@ def get_outdated_packages() -> Dict[str, Package]:
 
 def _parse_outdated_version_line(line: str) -> Optional[Package]:
     name, current, latest, _ = line.split()
-    return Package(name=name, current=version.parse(current), latest=version.parse(latest))
+    return Package(
+        name=name, current=version.parse(current), latest=version.parse(latest)
+    )
 
 
 def get_uptodate_packages() -> Dict[str, Package]:
@@ -159,7 +162,11 @@ def get_uptodate_packages() -> Dict[str, Package]:
 def _parse_uptodate_version_line(line: str) -> Optional[Package]:
     name, current = line.split()
     # In this case, the current == latest versions
-    return Package(name=name, current=version.parse(current), latest=version.parse(current))
+    return Package(
+        name=name,
+        current=version.parse(current),
+        latest=version.parse(current),
+    )
 
 
 def run(command: str) -> bytes:

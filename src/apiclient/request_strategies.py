@@ -51,25 +51,53 @@ class RequestStrategy(BaseRequestStrategy):
     def set_session(self, session: requests.Session):
         self.get_client().set_session(session)
 
-    def post(self, endpoint: str, data: dict, params: OptionalDict = None, **kwargs):
+    def post(
+        self, endpoint: str, data: dict, params: OptionalDict = None, **kwargs
+    ):
         """Send data and return response data from POST endpoint."""
-        return self._make_request(self.get_session().post, endpoint, data=data, params=params, **kwargs)
+        return self._make_request(
+            self.get_session().post,
+            endpoint,
+            data=data,
+            params=params,
+            **kwargs,
+        )
 
     def get(self, endpoint: str, params: OptionalDict = None, **kwargs):
         """Return response data from GET endpoint."""
-        return self._make_request(self.get_session().get, endpoint, params=params, **kwargs)
+        return self._make_request(
+            self.get_session().get, endpoint, params=params, **kwargs
+        )
 
-    def put(self, endpoint: str, data: dict, params: OptionalDict = None, **kwargs):
+    def put(
+        self, endpoint: str, data: dict, params: OptionalDict = None, **kwargs
+    ):
         """Send data to overwrite resource and return response data from PUT endpoint."""
-        return self._make_request(self.get_session().put, endpoint, data=data, params=params, **kwargs)
+        return self._make_request(
+            self.get_session().put,
+            endpoint,
+            data=data,
+            params=params,
+            **kwargs,
+        )
 
-    def patch(self, endpoint: str, data: dict, params: OptionalDict = None, **kwargs):
+    def patch(
+        self, endpoint: str, data: dict, params: OptionalDict = None, **kwargs
+    ):
         """Send data to update resource and return response data from PATCH endpoint."""
-        return self._make_request(self.get_session().patch, endpoint, data=data, params=params, **kwargs)
+        return self._make_request(
+            self.get_session().patch,
+            endpoint,
+            data=data,
+            params=params,
+            **kwargs,
+        )
 
     def delete(self, endpoint: str, params: OptionalDict = None, **kwargs):
         """Remove resource with DELETE endpoint."""
-        return self._make_request(self.get_session().delete, endpoint, params=params, **kwargs)
+        return self._make_request(
+            self.get_session().delete, endpoint, params=params, **kwargs
+        )
 
     def _make_request(
         self,
@@ -97,7 +125,9 @@ class RequestStrategy(BaseRequestStrategy):
                 )
             )
         except Exception as error:
-            raise UnexpectedError(f"Error when contacting '{endpoint}'") from error
+            raise UnexpectedError(
+                f"Error when contacting '{endpoint}'"
+            ) from error
         else:
             self._check_response(response)
         return self._decode_response_data(response)
@@ -133,7 +163,9 @@ class RequestStrategy(BaseRequestStrategy):
             self._handle_bad_response(response)
 
     def _decode_response_data(self, response: Response):
-        return self.get_client().get_response_handler().get_request_data(response)
+        return (
+            self.get_client().get_response_handler().get_request_data(response)
+        )
 
     def _handle_bad_response(self, response: Response):
         """Convert the error into an understandable client exception."""
@@ -158,7 +190,9 @@ class QueryParamPaginatedRequestStrategy(RequestStrategy):
             response = super().get(endpoint, params=this_page_params, **kwargs)
 
             pages.append(response)
-            next_page_params = self.get_next_page_params(response, previous_page_params=this_page_params)
+            next_page_params = self.get_next_page_params(
+                response, previous_page_params=this_page_params
+            )
 
             if next_page_params:
                 params.update(next_page_params)
@@ -168,7 +202,9 @@ class QueryParamPaginatedRequestStrategy(RequestStrategy):
 
         return pages
 
-    def get_next_page_params(self, response, previous_page_params: dict) -> OptionalDict:
+    def get_next_page_params(
+        self, response, previous_page_params: dict
+    ) -> OptionalDict:
         return self._next_page(response, previous_page_params)
 
 
@@ -185,10 +221,14 @@ class UrlPaginatedRequestStrategy(RequestStrategy):
 
             pages.append(response)
 
-            next_page_url = self.get_next_page_url(response, previous_page_url=endpoint)
+            next_page_url = self.get_next_page_url(
+                response, previous_page_url=endpoint
+            )
             endpoint = next_page_url
 
         return pages
 
-    def get_next_page_url(self, response, previous_page_url: str) -> OptionalDict:
+    def get_next_page_url(
+        self, response, previous_page_url: str
+    ) -> OptionalDict:
         return self._next_page(response, previous_page_url)

@@ -22,7 +22,12 @@ class APIRequestError(APIClientError):
     status_code: OptionalInt = None
     info: str = ""
 
-    def __init__(self, message: str = "", status_code: OptionalInt = None, info: str = ""):
+    def __init__(
+        self,
+        message: str = "",
+        status_code: OptionalInt = None,
+        info: str = "",
+    ):
         self.message = self.message or message
         self.status_code = self.status_code or status_code
         self.info = self.info or info

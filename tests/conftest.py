@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import NamedTuple
 from unittest.mock import Mock, sentinel
 
-
 import pytest
 import requests
 import requests_mock
@@ -23,7 +22,10 @@ api_client_vcr = vcr.VCR(
 )
 
 error_cassette_vcr = vcr.VCR(
-    serializer="yaml", cassette_library_dir=VCR_CASSETTE_DIR, record_mode="once", match_on=["uri"]
+    serializer="yaml",
+    cassette_library_dir=VCR_CASSETTE_DIR,
+    record_mode="once",
+    match_on=["uri"],
 )
 
 
@@ -55,11 +57,15 @@ class MockClient(NamedTuple):
 def mock_client():
     # Build our fully mocked client
     _mock_client: APIClient = Mock(spec=APIClient)
-    mock_request_formatter: BaseRequestFormatter = Mock(spec=BaseRequestFormatter)
+    mock_request_formatter: BaseRequestFormatter = Mock(
+        spec=BaseRequestFormatter
+    )
     mock_response_handler: BaseResponseHandler = Mock(spec=BaseResponseHandler)
     _mock_client.get_default_query_params.return_value = {}
     _mock_client.get_default_headers.return_value = {}
-    _mock_client.get_default_username_password_authentication.return_value = None
+    _mock_client.get_default_username_password_authentication.return_value = (
+        None
+    )
     _mock_client.get_request_timeout.return_value = 30.0
     _mock_client.get_session.return_value = requests.session()
     mock_request_formatter.format.return_value = {}
@@ -68,5 +74,7 @@ def mock_client():
     _mock_client.get_response_handler.return_value = mock_response_handler
 
     return MockClient(
-        client=_mock_client, request_formatter=mock_request_formatter, response_handler=mock_response_handler
+        client=_mock_client,
+        request_formatter=mock_request_formatter,
+        response_handler=mock_response_handler,
     )

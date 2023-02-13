@@ -3,9 +3,24 @@
 
 import pytest
 
-from apiclient import JsonRequestFormatter, JsonResponseHandler, NoAuthentication
-from apiclient.exceptions import ClientError, RedirectionError, ServerError, UnexpectedError
-from tests.integration_tests.client import Client, ClientErrorHandler, InternalError, OtherError, Urls
+from apiclient import (
+    JsonRequestFormatter,
+    JsonResponseHandler,
+    NoAuthentication,
+)
+from apiclient.exceptions import (
+    ClientError,
+    RedirectionError,
+    ServerError,
+    UnexpectedError,
+)
+from tests.integration_tests.client import (
+    Client,
+    ClientErrorHandler,
+    InternalError,
+    OtherError,
+    Urls,
+)
 
 
 def test_client_response(cassette):
@@ -37,12 +52,24 @@ def test_client_response(cassette):
     assert new_user == {"userId": 4, "firstName": "Lucy", "lastName": "Qux"}
     assert cassette.play_count == 5
 
-    overwritten_user = client.overwrite_user(user_id=4, first_name="Lucy", last_name="Foo")
-    assert overwritten_user == {"userId": 4, "firstName": "Lucy", "lastName": "Foo"}
+    overwritten_user = client.overwrite_user(
+        user_id=4, first_name="Lucy", last_name="Foo"
+    )
+    assert overwritten_user == {
+        "userId": 4,
+        "firstName": "Lucy",
+        "lastName": "Foo",
+    }
     assert cassette.play_count == 6
 
-    updated_user = client.update_user(user_id=4, first_name="Lucy", last_name="Qux")
-    assert updated_user == {"userId": 4, "firstName": "Lucy", "lastName": "Qux"}
+    updated_user = client.update_user(
+        user_id=4, first_name="Lucy", last_name="Qux"
+    )
+    assert updated_user == {
+        "userId": 4,
+        "firstName": "Lucy",
+        "lastName": "Qux",
+    }
     assert cassette.play_count == 7
 
     # DELETE cassette doesn't seem to be working correctly.
@@ -96,31 +123,74 @@ def test_client_response(cassette):
     # failed on third 500 with no_code
     with pytest.raises(ServerError) as exc_info:
         client.list_user_accounts_paginated(user_id=10)
-    assert str(exc_info.value) == "500 Error: SERVER ERROR for url: http://testserver/accounts?userId=10"
+    assert (
+        str(exc_info.value)
+        == "500 Error: SERVER ERROR for url: http://testserver/accounts?userId=10"
+    )
     # and 504 with html body
     with pytest.raises(ServerError) as exc_info:
         client.list_user_accounts_paginated(user_id=10)
-    assert str(exc_info.value) == "504 Error: SERVER ERROR for url: http://testserver/accounts?userId=10"
+    assert (
+        str(exc_info.value)
+        == "504 Error: SERVER ERROR for url: http://testserver/accounts?userId=10"
+    )
     # and 500 with empty body
     with pytest.raises(ServerError) as exc_info:
         client.list_user_accounts_paginated(user_id=10)
-    assert str(exc_info.value) == "500 Error: SERVER ERROR for url: http://testserver/accounts?userId=10"
+    assert (
+        str(exc_info.value)
+        == "500 Error: SERVER ERROR for url: http://testserver/accounts?userId=10"
+    )
 
 
 @pytest.mark.parametrize(
     "user_id,expected_error,expected_message",
     [
-        (1, RedirectionError, "300 Error: REDIRECT for url: http://testserver/users/1"),
-        (2, RedirectionError, "399 Error: REDIRECT for url: http://testserver/users/2"),
-        (3, ClientError, "400 Error: CLIENT ERROR for url: http://testserver/users/3"),
-        (4, ClientError, "499 Error: CLIENT ERROR for url: http://testserver/users/4"),
-        (5, ServerError, "500 Error: SERVER ERROR for url: http://testserver/users/5"),
-        (6, ServerError, "599 Error: SERVER ERROR for url: http://testserver/users/6"),
-        (7, UnexpectedError, "600 Error: UNEXPECTED for url: http://testserver/users/7"),
-        (8, UnexpectedError, "999 Error: UNEXPECTED for url: http://testserver/users/8"),
+        (
+            1,
+            RedirectionError,
+            "300 Error: REDIRECT for url: http://testserver/users/1",
+        ),
+        (
+            2,
+            RedirectionError,
+            "399 Error: REDIRECT for url: http://testserver/users/2",
+        ),
+        (
+            3,
+            ClientError,
+            "400 Error: CLIENT ERROR for url: http://testserver/users/3",
+        ),
+        (
+            4,
+            ClientError,
+            "499 Error: CLIENT ERROR for url: http://testserver/users/4",
+        ),
+        (
+            5,
+            ServerError,
+            "500 Error: SERVER ERROR for url: http://testserver/users/5",
+        ),
+        (
+            6,
+            ServerError,
+            "599 Error: SERVER ERROR for url: http://testserver/users/6",
+        ),
+        (
+            7,
+            UnexpectedError,
+            "600 Error: UNEXPECTED for url: http://testserver/users/7",
+        ),
+        (
+            8,
+            UnexpectedError,
+            "999 Error: UNEXPECTED for url: http://testserver/users/8",
+        ),
     ],
 )
-def test_bad_response_error_codes(user_id, expected_error, expected_message, error_cassette):
+def test_bad_response_error_codes(
+    user_id, expected_error, expected_message, error_cassette
+):
     # Error cassette has been configured so that different users respond with different error codes
 
     client = Client(

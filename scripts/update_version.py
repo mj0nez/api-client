@@ -38,9 +38,7 @@ def fmt_version(major: int, minor: int, patch: int, rc: int = 0):
 
 
 def extract_version_from_ref(ref: str) -> Tuple[int, int, int, int]:
-    err = (
-        f"invalid github ref, expecting in format `refs/tags/v<major>.<minor>.<patch>[rc<rc>]`, got: '{ref}'"
-    )
+    err = f"invalid github ref, expecting in format `refs/tags/v<major>.<minor>.<patch>[rc<rc>]`, got: '{ref}'"
     try:
         title, subtitle, version = ref.split("/")
     except ValueError:
@@ -58,7 +56,9 @@ def extract_version_from_ref(ref: str) -> Tuple[int, int, int, int]:
 
 
 def get_current_branch() -> str:
-    p = subprocess.run(["git", "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True)
+    p = subprocess.run(
+        ["git", "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True
+    )
     if p.returncode != 0:
         raise SystemExit("Unable to determine current git branch name")
     return p.stdout.decode("utf-8").strip()

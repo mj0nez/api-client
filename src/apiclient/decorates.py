@@ -23,7 +23,11 @@ def _process_class(cls, base_url):
         base_url = base_url.rstrip("/")
 
     for name, value in inspect.getmembers(cls):
-        if name.startswith("_") or inspect.ismethod(value) or inspect.isfunction(value):
+        if (
+            name.startswith("_")
+            or inspect.ismethod(value)
+            or inspect.isfunction(value)
+        ):
             # Ignore any private or class attributes.
             continue
         new_value = str(value).lstrip("/")
